@@ -1,0 +1,87 @@
+{% extends "base.html" %}
+{% block title %}{{ titulo }}{% endblock %}
+{% block extra_head %}
+<style>
+    .ag-form-hero h1 {
+        font-family: "Cormorant Garamond", Georgia, serif;
+        font-weight: 500;
+        font-size: 1.75rem;
+        letter-spacing: 0.08em;
+        color: var(--ag-cream);
+    }
+    .ag-form-card {
+        background: var(--ag-surface);
+        border: 1px solid var(--ag-line);
+        border-radius: 2px;
+    }
+    .ag-form-card .form-label {
+        font-size: 0.7rem;
+        letter-spacing: 0.16em;
+        text-transform: uppercase;
+        color: var(--ag-muted);
+    }
+    .ag-form-card .form-control {
+        background: var(--ag-bg);
+        border: 1px solid var(--ag-line);
+        color: var(--ag-cream);
+        border-radius: 2px;
+    }
+    .ag-form-card .form-control:focus {
+        border-color: var(--ag-gold);
+        box-shadow: 0 0 0 0.2rem rgba(196, 163, 90, 0.15);
+        background: var(--ag-bg);
+        color: var(--ag-cream);
+    }
+    .ag-form-card .form-control::placeholder { color: var(--ag-muted); opacity: 0.6; }
+    .ag-form-card input[type="number"]::-webkit-outer-spin-button,
+    .ag-form-card input[type="number"]::-webkit-inner-spin-button {
+        -webkit-appearance: none;
+        margin: 0;
+    }
+    .ag-form-card input[type="number"] {
+        -moz-appearance: textfield;
+        appearance: textfield;
+    }
+</style>
+{% endblock %}
+{% block content %}
+<div class="mb-4 ag-form-hero">
+    <h1 class="mb-0">{{ titulo }}</h1>
+</div>
+
+<div class="row justify-content-center">
+    <div class="col-lg-6">
+        <div class="card ag-form-card shadow-none">
+            <div class="card-body p-4">
+                <form method="post" action="{{ url_for('editar', producto_id=producto.id) if producto else url_for('registrar') }}">
+                    <div class="mb-3">
+                        <label for="nombre" class="form-label">Nombre</label>
+                        <input type="text" class="form-control" id="nombre" name="nombre" required
+                               value="{{ producto.nombre if producto else '' }}">
+                    </div>
+                    <div class="mb-3">
+                        <label for="categoria" class="form-label">Categoría</label>
+                        <input type="text" class="form-control" id="categoria" name="categoria" required
+                               value="{{ producto.categoria if producto else '' }}"
+                               placeholder="Ej. Portátiles, Accesorios">
+                    </div>
+                    <div class="mb-3">
+                        <label for="precio" class="form-label">Precio</label>
+                        <input type="number" step="0.01" min="0" class="form-control" id="precio" name="precio" required
+                               value="{{ producto.precio if producto else '' }}">
+                    </div>
+                    <div class="mb-4">
+                        <label for="stock" class="form-label">Stock</label>
+                        <input type="number" min="0" step="1" class="form-control" id="stock" name="stock" required
+                               value="{{ producto.stock if producto else '' }}">
+                    </div>
+                    <div class="d-flex flex-wrap gap-2">
+                        <button type="submit" class="btn ag-btn-gold">Guardar</button>
+                        <a href="{{ url_for('listar') }}" class="btn ag-btn-ghost">Volver a la colección</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
