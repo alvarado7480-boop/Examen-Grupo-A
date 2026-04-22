@@ -1,0 +1,132 @@
+{% extends "base.html" %}
+{% block title %}Listado{% endblock %}
+{% block extra_head %}
+<style>
+    .ag-hero {
+        margin-bottom: 2rem;
+        padding-bottom: 1.25rem;
+        border-bottom: 1px solid var(--ag-line);
+    }
+    .ag-hero h1 {
+        font-family: "Cormorant Garamond", Georgia, serif;
+        font-weight: 500;
+        font-size: clamp(1.75rem, 4vw, 2.25rem);
+        letter-spacing: 0.08em;
+        color: var(--ag-cream);
+    }
+    .ag-table-card {
+        background: var(--ag-surface);
+        border: 1px solid var(--ag-line);
+        border-radius: 2px;
+        overflow: hidden;
+    }
+    .ag-table {
+        --bs-table-bg: transparent;
+        --bs-table-color: var(--ag-cream);
+        margin: 0;
+    }
+    .ag-table thead th {
+        font-size: 0.68rem;
+        letter-spacing: 0.2em;
+        text-transform: uppercase;
+        font-weight: 500;
+        color: var(--ag-gold);
+        background: var(--ag-elevated) !important;
+        border-color: var(--ag-line) !important;
+        padding: 1rem 1rem;
+    }
+    .ag-table tbody td {
+        border-color: var(--ag-line) !important;
+        padding: 0.9rem 1rem;
+        vertical-align: middle;
+    }
+    .ag-table tbody tr:hover {
+        background: rgba(196, 163, 90, 0.04);
+    }
+    .ag-cat {
+        display: inline-block;
+        font-size: 0.7rem;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        color: var(--ag-muted);
+        border: 1px solid var(--ag-line);
+        padding: 0.25rem 0.6rem;
+        border-radius: 1px;
+    }
+    .ag-price { font-variant-numeric: tabular-nums; color: var(--ag-cream); }
+    .ag-id { color: var(--ag-muted); font-size: 0.85rem; }
+    .ag-name { font-weight: 400; }
+    .ag-empty {
+        background: var(--ag-surface);
+        border: 1px solid var(--ag-line);
+        color: var(--ag-muted);
+        padding: 2rem;
+        text-align: center;
+    }
+    .ag-empty a { color: var(--ag-gold); text-decoration: none; }
+    .ag-empty a:hover { text-decoration: underline; }
+    .ag-btn-retire {
+        border: 1px solid rgba(150, 95, 88, 0.45) !important;
+        color: #c4a6a0 !important;
+        background: transparent !important;
+        font-size: 0.7rem;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        padding: 0.35rem 0.65rem;
+    }
+    .ag-btn-retire:hover {
+        background: rgba(150, 95, 88, 0.12) !important;
+        color: #e8d6d3 !important;
+        border-color: rgba(180, 120, 110, 0.55) !important;
+    }
+</style>
+{% endblock %}
+{% block content %}
+<div class="d-flex flex-column flex-md-row justify-content-md-between align-items-md-end gap-3 ag-hero">
+    <div>
+        <h1 class="mb-0">Listado de productos</h1>
+    </div>
+    <a href="{{ url_for('registrar') }}" class="btn ag-btn-gold">Añadir artículo</a>
+</div>
+
+{% if productos %}
+<div class="ag-table-card">
+    <div class="table-responsive">
+        <table class="table ag-table table-hover">
+            <thead>
+            <tr>
+                <th scope="col">ID</th>
+                <th scope="col">Artículo</th>
+                <th scope="col">Línea</th>
+                <th scope="col" class="text-end">Precio</th>
+                <th scope="col" class="text-end">Unidades</th>
+                <th scope="col" class="text-end">Acciones</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for p in productos %}
+                <tr>
+                    <td class="ag-id">{{ p.id }}</td>
+                    <td class="ag-name">{{ p.nombre }}</td>
+                    <td><span class="ag-cat">{{ p.categoria }}</span></td>
+                    <td class="text-end ag-price">{{ p.precio|int }}&nbsp;Bs</td>
+                    <td class="text-end ag-price">{{ p.stock }}</td>
+                    <td class="text-end text-nowrap">
+                        <a href="{{ url_for('editar', producto_id=p.id) }}" class="btn btn-sm ag-btn-ghost me-1">Editar</a>
+                        <form class="d-inline" method="post" action="{{ url_for('eliminar', producto_id=p.id) }}"
+                              onsubmit="return confirm('¿Retirar este artículo del catálogo?');">
+                            <button type="submit" class="btn btn-sm ag-btn-retire">Retirar</button>
+                        </form>
+                    </td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% else %}
+<div class="ag-empty">
+    La colección está vacía. <a href="{{ url_for('registrar') }}">Añadir el primer artículo</a>.
+</div>
+{% endif %}
+{% endblock %}
